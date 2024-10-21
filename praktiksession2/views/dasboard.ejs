@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Dashboard Stok Ikan</title>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header>
+            <h1>Manajemen Stok Ikan</h1>
+            <p>Selamat datang, <%= user.username %></p>
+            <a href="/stock/logout" class="logout-btn">Logout</a>
+        </header>
+
+        <div class="stock-form">
+            <h2>Tambah Stok Baru</h2>
+            <form action="/stock/add-stock" method="POST">
+                <input type="text" name="fish_name" placeholder="Nama Ikan" required>
+                <input type="number" name="quantity" placeholder="Jumlah (kg)" required>
+                <input type="number" name="price" placeholder="Harga per kg" required>
+                <input type="text" name="supplier" placeholder="Supplier" required>
+                <button type="submit">Tambah Stok</button>
+            </form>
+        </div>
+
+        <div class="stock-list">
+            <h2>Daftar Stok</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Ikan</th>
+                        <th>Jumlah (kg)</th>
+                        <th>Harga/kg</th>
+                        <th>Supplier</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% stocks.forEach(stock => { %>
+                    <tr>
+                        <td><%= stock.fish_name %></td>
+                        <td><%= stock.quantity %></td>
+                        <td>Rp <%= stock.price %></td>
+                        <td><%= stock.supplier %></td>
+                        <td>
+                            <button onclick="showEditForm(<%= JSON.stringify(stock) %>)">Edit</button>
+                            <a href="/stock/delete-stock/<%= stock.id %>" 
+                               onclick="return confirm('Yakin hapus stok ini?')">Hapus</a>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Stok</h2>
+            <form id="editForm" action="/stock/update-stock/" method="POST">
+                <input type="text" name="fish_name" id="edit_fish_name">
+                <input type="number" name="quantity" id="edit_quantity">
+                <input type="number" name="price" id="edit_price">
+                <input type="text" name="supplier" id="edit_supplier">
+                <button type="submit">Update</button>
+                <button type="button" onclick="closeEditModal()">Batal</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
